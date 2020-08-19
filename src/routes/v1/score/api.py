@@ -44,10 +44,7 @@ class ScoresListAPI(Base):
                     per_page=data['per_page']),
                 'scores': self.dump(
                     schema=dump_many_schema,
-                    instance=scores.items,
-                    params={
-                        'include': data['include']
-                    }
+                    instance=scores.items
                 )
             }
         )
