@@ -14,8 +14,8 @@ if [ "$DATABASE" = "score" ]; then
   echo "PostgreSQL started"
 fi
 
-if [ "$MONGO_DATABASE" = "{mongo_database_name}" ]; then
-  echo "Waiting for {mongo_database_name}..."
+if [ "$MONGO_DATABASE" = "score" ]; then
+  echo "Waiting for score..."
 
   while ! nc -z $MONGO_HOST $MONGO_PORT; do
     sleep 0.1
