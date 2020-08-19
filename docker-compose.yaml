@@ -66,13 +66,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 20
-  mongodb:
-    container_name: db
-    image: mongo:3.6
+  score_mongodb:
+    container_name: score_mongodb
+    build:
+      context: ${HUNCHO_DIR}/services/mongodb
+      dockerfile: ${HUNCHO_DIR}/services/mongodb/build/Dockerfile
+      args:
+        MONGO_VERSION: 3.6
     volumes:
-      - # mongodb data :/data/db
+      - ${HUNCHO_DIR}/data/dev/score_mongodb/data:/data/db
     env_file:
-      - # mongodb env
+      - ${HUNCHO_DIR}/env/dev/.env.score_mongodb
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
       interval: 10s
