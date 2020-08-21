@@ -9,6 +9,16 @@ services:
     restart: always
     ports:
       - 8080:8080
+  mongo-express:
+    container_name: mongo-express
+    build:
+      context: ${HUNCHO_DIR}/services/mongo-express
+      dockerfile: ${HUNCHO_DIR}/services/mongo-express/build/Dockerfile
+    restart: always
+    ports:
+      - 8081:8081
+    env_file:
+      - ${HUNCHO_DIR}/env/dev/.env.mongo-express
   score:
     container_name: score
     build:
@@ -77,11 +87,6 @@ services:
       - ${HUNCHO_DIR}/data/dev/score_mongodb/data:/data/db
     env_file:
       - ${HUNCHO_DIR}/env/dev/.env.score_mongodb
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongo mongodb:27017/test --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 20
   score_proxy:
     container_name: score_proxy
     build:
