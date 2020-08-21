@@ -21,9 +21,8 @@ class Contest(Base):
 
     def handle_event(self, key, data):
         if key == 'contest_created':
-            # create a wager
+            # create a score
             contest = self.contest_external.get_contest(endpoint=data['endpoint'])
             contest_uuid = contest['data']['contests']['uuid']
-            owner_uuid = contest['data']['contests']['owner_uuid']
-            wager = Score().create(owner_uuid=owner_uuid, status='active')
-            _ = self.create(contest_uuid=contest_uuid, wager=wager)
+            score = Score().create(status='active')
+            _ = self.create(contest_uuid=contest_uuid, score=score)
