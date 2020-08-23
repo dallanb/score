@@ -21,7 +21,7 @@ class MongoDB:
 
     @classmethod
     # TODO: Consider using dataclass instead of a named tuple
-    def find(cls, model, **kwargs):
+    def find(cls, model, page=None, per_page=None, **kwargs):
         items = model.objects(**kwargs)
         total = items.count()
         Find = collections.namedtuple('Find', ['items', 'total'])

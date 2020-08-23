@@ -16,10 +16,7 @@ class Log(Base):
         log = self.init_mongo(model=self.log_model, **kwargs)
         _ = self.notify(
             topic='scores',
-            value=self.event.generate_endpoint(
-                topic='scores',
-                value=log.score_uuid
-            ),
+            value={'uuid': str(log.uuid)},
             key='log_created'
         )
         return self.save_mongo(instance=log)

@@ -8,9 +8,7 @@ class Log(mongodb.Document):
     ctime = mongodb.IntField(default=time_now)
     mtime = mongodb.IntField(onupdate=time_now)
     score_uuid = mongodb.UUIDField(binary=False, required=True)
-    sport_uuid = mongodb.UUIDField(binary=False, required=True)
-    participants = mongodb.ListField()
-    sheet = mongodb.DictField()
+    sheet = mongodb.ListField()
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
