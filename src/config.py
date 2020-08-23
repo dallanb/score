@@ -12,6 +12,11 @@ class Config(object):
     KAFKA_HOST = os.getenv("KAFKA_HOST")
     KAFKA_PORT = os.getenv("KAFKA_PORT")
     KAFKA_TOPICS = os.getenv("KAFKA_TOPICS").split(",")
+    CONTEST_HOST = os.getenv("CONTEST_HOST")
+    CONTEST_PORT = os.getenv("CONTEST_PORT")
+    MONGODB_SETTINGS = {
+        'host': os.getenv("MONGO_URL")
+    }
     REDIS_CONFIG = {
         'CACHE_TYPE': 'redis',
         'CACHE_REDIS_HOST': os.getenv("CACHE_HOST"),

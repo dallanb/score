@@ -1,11 +1,15 @@
 import os
+from flask import g
 from flask.cli import FlaskGroup
-from src import app, db, cache
+from src import app, db, cache, common
+from bin import init_score_status
+import src
 
 cli = FlaskGroup(app)
 
 
 def full_init():
+    initialize_statuses()
     os.system('flask seed run')
 
 
@@ -26,6 +30,13 @@ def clear_cache():
     cache.clear()
 
 
+def initialize_statuses():
+    with app.app_context():
+        g.src = src
+        init_score_status(status_enums=common.StatusEnum)
+        return
+
+
 @cli.command("init")
 def init():
     full_init()
@@ -44,6 +55,11 @@ def delete_db():
 @cli.command("flush_cache")
 def flush_cache():
     clear_cache()
+
+
+@cli.command("init_status")
+def init_status():
+    initialize_statuses()
 
 
 if __name__ == "__main__":
