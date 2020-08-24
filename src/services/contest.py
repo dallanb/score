@@ -21,8 +21,6 @@ class Contest(Base):
 
     def handle_event(self, key, data):
         if key == 'contest_created':
-            # create a score
-            contest = self.contest_external.get_contest(endpoint=data['endpoint'])
-            contest_uuid = contest['data']['contests']['uuid']
+            # create a score & log
             score = Score().create(status='active')
-            _ = self.create(contest_uuid=contest_uuid, score=score)
+            _ = self.create(contest_uuid=data['uuid'], score=score)

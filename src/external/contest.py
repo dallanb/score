@@ -10,7 +10,7 @@ class Contest(Base):
         self.port = app.config['CONTEST_PORT']
         self.base_url = f'http://{self.host}:{self.port}'
 
-    def get_contest(self, endpoint):
-        url = f'{self.base_url}{endpoint}'
-        res = self.get(url=url)
+    def get_contest(self, uuid, params=None):
+        url = f'{self.base_url}/contests/{uuid}'
+        res = self.get(url=url, params=params)
         return res.json()

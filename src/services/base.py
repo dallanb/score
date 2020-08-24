@@ -1,11 +1,12 @@
 import logging
-from ..common import Cache, DB, Event
+from ..common import Cache, DB, Event, MongoDB
 from ..common.error import ManualException
 
 
 class Base:
     def __init__(self):
         self.db = DB()
+        self.mongodb = MongoDB()
         self.cache = Cache()
         self.event = Event()
         self.logger = logging.getLogger(__name__)
@@ -25,6 +26,22 @@ class Base:
 
     def destroy(self, instance):
         return self.db.destroy(instance=instance)
+
+    # @cache.memoize(timeout=1000)
+    def count_mongo(self, model):
+        return self.mongodb.count(model=model)
+
+    def find_mongo(self, model, **kwargs):
+        return self.mongodb.find(model=model, **kwargs)
+
+    def init_mongo(self, model, **kwargs):
+        return self.mongodb.init(model=model, **kwargs)
+
+    def save_mongo(self, instance):
+        return self.mongodb.save(instance=instance)
+
+    def destroy_mongo(self, instance):
+        return self.mongodb.destroy(instance=instance)
 
     @classmethod
     def dump(cls, schema, instance, params=None):
