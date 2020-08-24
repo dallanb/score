@@ -2,7 +2,7 @@ from .. import mongodb
 from ..common.utils import generate_uuid
 
 
-class Log(mongodb.Document):
+class Log(mongodb.DynamicDocument):
     uuid = mongodb.UUIDField(binary=False, default=generate_uuid)
 
     def __init__(self, *args, **kwargs):
