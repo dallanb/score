@@ -24,5 +24,4 @@ if [ "$MONGO_DATABASE" = "score" ]; then
   echo "MongoDB started"
 fi
 
-
-manage run -h 0.0.0.0
+gunicorn --bind 0.0.0.0:5000 manage:app
