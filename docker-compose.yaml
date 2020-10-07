@@ -1,28 +1,6 @@
 version: "3.2"
 
 services:
-  adminer:
-    container_name: adminer
-    build:
-      context: ${HUNCHO_DIR}/services/adminer
-      dockerfile: ${HUNCHO_DIR}/services/adminer/build/Dockerfile
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - app-net
-  mongo-express:
-    container_name: mongo-express
-    build:
-      context: ${HUNCHO_DIR}/services/mongo-express
-      dockerfile: ${HUNCHO_DIR}/services/mongo-express/build/Dockerfile
-    restart: always
-    ports:
-      - 8081:8081
-    env_file:
-      - ${HUNCHO_DIR}/env/dev/.env.score-mongo-express
-    networks:
-      - app-net
   score:
     container_name: score
     build:
@@ -42,39 +20,37 @@ services:
       - ${HUNCHO_DIR}/env/dev/.env.score
     healthcheck:
       test: curl --fail -s score:5000/ping || exit 1
-      interval: 60s
+      interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - 5000:5000
     depends_on:
-      - score_cache
+#      - score_cache
       - score_db
+      - score_mongodb
     networks:
-      - app-net
-  score_cache:
-    container_name: score_cache
-    build:
-      context: ${HUNCHO_DIR}/services/redis
-      dockerfile: ${HUNCHO_DIR}/services/redis/build/Dockerfile
-    restart: unless-stopped
-    volumes:
-      - ${HUNCHO_DIR}/data/dev/score_cache/redis_data:/var/lib/redis
-      - ${HUNCHO_DIR}/data/dev/score_cache/redis.conf:/usr/local/etc/redis/redis.conf
-    env_file:
-      - ${HUNCHO_DIR}/env/dev/.env.score_cache
-    healthcheck:
-      test: ["CMD", "redis-cli","ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    networks:
-      - app-net
+      - score-net
+      - kong-net
+#  score_cache:
+#    container_name: score_cache
+#    build:
+#      context: ${HUNCHO_DIR}/services/redis
+#      dockerfile: ${HUNCHO_DIR}/services/redis/build/Dockerfile
+#    restart: unless-stopped
+#    volumes:
+#      - ${HUNCHO_DIR}/data/dev/score_cache/redis_data:/var/lib/redis
+#      - ${HUNCHO_DIR}/data/dev/score_cache/redis.conf:/usr/local/etc/redis/redis.conf
+#    env_file:
+#      - ${HUNCHO_DIR}/env/dev/.env.score_cache
+#    healthcheck:
+#      test: ["CMD", "redis-cli","ping"]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
   score_db:
     container_name: score_db
-    build:
-      context: ${HUNCHO_DIR}/services/postgresql
-      dockerfile: ${HUNCHO_DIR}/services/postgresql/build/Dockerfile
-      args:
-        POSTGRES_VERSION: 9.6
+    image: postgres:9.6
     volumes:
       - ${HUNCHO_DIR}/data/dev/score_db/data:/var/lib/postgresql/data/
     env_file:
@@ -85,36 +61,39 @@ services:
       timeout: 5s
       retries: 20
     networks:
-      - app-net
+      - score-net
   score_mongodb:
     container_name: score_mongodb
-    build:
-      context: ${HUNCHO_DIR}/services/mongodb
-      dockerfile: ${HUNCHO_DIR}/services/mongodb/build/Dockerfile
-      args:
-        MONGO_VERSION: 3.6
+    image: mongo:3.6
     volumes:
       - ${HUNCHO_DIR}/data/dev/score_mongodb/data:/data/db
-      - ${HUNCHO_DIR}/services/score/bin/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+      - ${HUNCHO_DIR}/data/dev/score_home:/home/mongodb # this must be manually created and chown'd to 999 https://github.com/docker-library/mongo/issues/323
+      - ${HUNCHO_DIR}/build/bin/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
     env_file:
       - ${HUNCHO_DIR}/env/dev/.env.score_mongodb
     networks:
-      - app-net
-  score_proxy:
-    container_name: score_proxy
-    build:
-      context: ${HUNCHO_DIR}/services/score/proxy
-      dockerfile: ${HUNCHO_DIR}/services/score/proxy/build/Dockerfile
-    restart: on-failure
-    volumes:
-      - ${HUNCHO_DIR}/services/score/statics/.:/usr/share/nginx/
+      - score-net
+  adminer:
+    container_name: adminer
+    image: adminer:latest
+    restart: always
     ports:
-      - 80:80
-    depends_on:
-      - score
+      - 8080:8080
     networks:
-      - app-net
+      - score-net
+  mongo-express:
+    container_name: mongo-express
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    env_file:
+      - ${HUNCHO_DIR}/env/dev/.env.score-mongo-express
+    networks:
+      - score-net
 networks:
-    app-net:
-        external:
-            name: build_app-net
+    score-net:
+        driver: bridge
+    kong-net:
+      external:
+        name: frontend_kong-net
