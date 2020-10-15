@@ -1,7 +1,7 @@
 import os
 from flask import g
 from flask.cli import FlaskGroup
-from src import app, db, cache, common
+from src import app, db, mongodb, cache, common
 from bin import init_score_status
 import src
 
@@ -24,6 +24,10 @@ def clear_db():
     for table in reversed(meta.sorted_tables):
         db.session.execute(table.delete())
     db.session.commit()
+
+
+def create_mongodb():
+    mongodb.connection.drop_database('score')
 
 
 def clear_cache():
@@ -50,6 +54,11 @@ def reset_db():
 @cli.command("delete_db")
 def delete_db():
     clear_db()
+
+
+@cli.command("reset_mongodb")
+def reset_mongodb():
+    create_mongodb()
 
 
 @cli.command("flush_cache")
