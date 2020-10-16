@@ -24,30 +24,13 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - 5000:5000
+      - 20003:5000
     depends_on:
 #      - score_cache
       - score_db
       - score_mongodb
     networks:
-      - score-net
-      - kong-net
-#  score_cache:
-#    container_name: score_cache
-#    build:
-#      context: ${HUNCHO_DIR}/services/redis
-#      dockerfile: ${HUNCHO_DIR}/services/redis/build/Dockerfile
-#    restart: unless-stopped
-#    volumes:
-#      - ${HUNCHO_DIR}/data/dev/score_cache/redis_data:/var/lib/redis
-#      - ${HUNCHO_DIR}/data/dev/score_cache/redis.conf:/usr/local/etc/redis/redis.conf
-#    env_file:
-#      - ${HUNCHO_DIR}/env/dev/.env.score_cache
-#    healthcheck:
-#      test: ["CMD", "redis-cli","ping"]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
+      - app-net
   score_db:
     container_name: score_db
     image: postgres:9.6
@@ -61,7 +44,7 @@ services:
       timeout: 5s
       retries: 20
     networks:
-      - score-net
+      - app-net
   score_mongodb:
     container_name: score_mongodb
     image: mongo:3.6
@@ -72,7 +55,7 @@ services:
     env_file:
       - ${HUNCHO_DIR}/env/dev/.env.score_mongodb
     networks:
-      - score-net
+      - app-net
   adminer:
     container_name: adminer
     image: adminer:latest
@@ -80,7 +63,7 @@ services:
     ports:
       - 8080:8080
     networks:
-      - score-net
+      - app-net
   mongo-express:
     container_name: mongo-express
     image: mongo-express:latest
@@ -90,10 +73,7 @@ services:
     env_file:
       - ${HUNCHO_DIR}/env/dev/.env.score-mongo-express
     networks:
-      - score-net
+      - app-net
 networks:
-    score-net:
-        driver: bridge
-    kong-net:
-      external:
-        name: frontend_kong-net
+  app-net:
+    driver: bridge
