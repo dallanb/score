@@ -6,11 +6,8 @@ from .mixins import BaseMixin
 class Contest(db.Model, BaseMixin):
     contest_uuid = db.Column(UUIDType(binary=False), nullable=False)
 
-    # FK
-    score_uuid = db.Column(UUIDType(binary=False), db.ForeignKey('score.uuid'), nullable=False)
-
     # Relationship
-    score = db.relationship("Score")
+    score = db.relationship("Score", back_populates="contest", uselist=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

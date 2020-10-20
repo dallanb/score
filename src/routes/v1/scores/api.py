@@ -48,3 +48,23 @@ class ScoresListAPI(Base):
                 )
             }
         )
+
+
+class ScoresContestAPI(Base):
+    def __init__(self):
+        Base.__init__(self)
+        self.score = Score()
+
+    @marshal_with(DataResponse.marshallable())
+    def get(self, uuid):
+        scores = self.score.find(contest_uuid=uuid)
+        if not scores.total:
+            self.throw_error(http_code=self.code.NOT_FOUND)
+        return DataResponse(
+            data={
+                'scores': self.dump(
+                    schema=dump_schema,
+                    instance=scores.items[0]
+                )
+            }
+        )
