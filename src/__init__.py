@@ -13,7 +13,7 @@ app.config.from_object("src.config.Config")
 # cache
 cache = Cache(app, config=app.config['REDIS_CONFIG'])
 # cors
-CORS(app)
+CORS(app, supports_credentials=True)
 # db
 db = SQLAlchemy(app)
 # mongodb
@@ -54,7 +54,7 @@ from .common import (
     ErrorResponse
 )
 
-if app.config['ENV'] == 'development':
+if app.config['ENV'] != 'development':
     # error handling
     @app.errorhandler(Exception)
     @marshal_with(ErrorResponse.marshallable())
@@ -67,11 +67,11 @@ if app.config['ENV'] == 'development':
     def handle_manual_error(error):
         return ErrorResponse(code=error.code, msg=error.msg, err=error.err), error.code
 
-
-@app.before_first_request
-def handle_first_request():
-    consumer.start()
-    producer.start()
+if app.config['ENV'] != 'development':
+    @app.before_first_request
+    def handle_first_request():
+        consumer.start()
+        producer.start()
 
 
 # before each request

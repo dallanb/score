@@ -24,9 +24,8 @@ services:
       timeout: 5s
       retries: 5
     ports:
-      - 20003:5000
+      - 20005:5000
     depends_on:
-#      - score_cache
       - score_db
       - score_mongodb
     networks:
