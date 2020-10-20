@@ -1,4 +1,4 @@
-from .services import Contest
+from .services import Score
 
 
 def new_event_listener(event):
@@ -7,4 +7,4 @@ def new_event_listener(event):
     data = event.value
 
     if topic == 'contests':
-        Contest().handle_event(key=key, data=data)
+        Score().handle_event(key=key, data=data)

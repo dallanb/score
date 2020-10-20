@@ -15,3 +15,8 @@ class Score(Base):
     def create(self, **kwargs):
         score = self.init(model=self.score_model, **kwargs)
         return self.save(instance=score)
+
+    def handle_event(self, key, data):
+        if key == 'contest_created':
+            # create a score
+            _ = self.create(status='active', contest_uuid=data['uuid'])
