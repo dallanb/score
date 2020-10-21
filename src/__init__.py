@@ -2,11 +2,8 @@ from flask import Flask, g
 from flask_caching import Cache
 from flask_cors import CORS
 from flask_marshmallow import Marshmallow
-from flask_migrate import Migrate
 from flask_mongoengine import MongoEngine
 from flask_restful import Api, marshal_with
-from flask_seeder import FlaskSeeder
-from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config.from_object("src.config.Config")
@@ -14,18 +11,12 @@ app.config.from_object("src.config.Config")
 cache = Cache(app, config=app.config['REDIS_CONFIG'])
 # cors
 CORS(app, supports_credentials=True)
-# db
-db = SQLAlchemy(app)
 # mongodb
 mongodb = MongoEngine(app)
-# migrate
-migrate = Migrate(app, db, compare_type=True)
 # ma
 ma = Marshmallow()
 # routes
 api = Api(app)
-# seeder
-seeder = FlaskSeeder(app, db)
 
 # logging
 import logging.config
@@ -36,11 +27,11 @@ logging.config.dictConfig(app.config['LOGGING_CONFIG'])
 from .lib import *
 
 # event
-producer = Producer(host=app.config['KAFKA_HOST'], port=app.config['KAFKA_PORT'])
+producer = Producer(url=app.config['KAFKA_URL'])
 
 from .event import new_event_listener
 
-consumer = Consumer(host=app.config['KAFKA_HOST'], port=app.config['KAFKA_PORT'],
+consumer = Consumer(url=app.config['KAFKA_URL'],
                     topics=app.config['KAFKA_TOPICS'], event_listener=new_event_listener)
 
 # import models
@@ -79,5 +70,4 @@ if app.config['ENV'] != 'development':
 def handle_request():
     g.logger = logging
     g.cache = cache
-    g.db = db
     g.config = app.config

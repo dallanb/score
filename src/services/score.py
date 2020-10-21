@@ -10,11 +10,11 @@ class Score(Base):
         self.score_model = ScoreModel
 
     def find(self, **kwargs):
-        return Base.find(self, model=self.score_model, **kwargs)
+        return Base.find_mongo(self, model=self.score_model, **kwargs)
 
     def create(self, **kwargs):
-        score = self.init(model=self.score_model, **kwargs)
-        return self.save(instance=score)
+        score = self.init_mongo(model=self.score_model, **kwargs)
+        return self.save_mongo(instance=score)
 
     def handle_event(self, key, data):
         if key == 'contest_created':

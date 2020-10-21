@@ -7,13 +7,9 @@ class Config(object):
     ENV = os.getenv("FLASK_ENV")
     PROPAGATE_EXCEPTIONS = os.getenv("PROPAGATE_EXCEPTIONS")
     TESTING = os.getenv("TESTING", False)
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite://")
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    KAFKA_HOST = os.getenv("KAFKA_HOST")
-    KAFKA_PORT = os.getenv("KAFKA_PORT")
+    KAFKA_URL = os.getenv("KAFKA_URL")
     KAFKA_TOPICS = os.getenv("KAFKA_TOPICS").split(",")
-    CONTEST_HOST = os.getenv("CONTEST_HOST")
-    CONTEST_PORT = os.getenv("CONTEST_PORT")
+    CONTEST_URL = os.getenv("CONTEST_URL")
     MONGODB_SETTINGS = {
         'host': os.getenv("MONGO_URL")
     }
