@@ -1,28 +1,28 @@
-from marshmallow import validate, Schema, post_dump
+from marshmallow import Schema, post_dump
 from webargs import fields
-from marshmallow_enum import EnumField
-from ....common.enums import StatusEnum
+
+from ..logs.schema import DumpLogSchema
 
 
 class DumpScoreSchema(Schema):
     uuid = fields.UUID()
     ctime = fields.Integer()
     mtime = fields.Integer()
-    status = EnumField(StatusEnum)
+    contest_uuid = fields.UUID()
+    status = fields.String()
+    log = fields.Nested(DumpLogSchema)
 
-    def get_attribute(self, obj, attr, default):
-        return getattr(obj, attr, default)
-
-    @post_dump
-    def make_obj(self, data, **kwargs):
-        return data
+class FetchScoreSchema(Schema):
+    include = fields.DelimitedList(fields.String(), required=False, missing=[])
 
 
 class FetchAllScoreSchema(Schema):
     page = fields.Int(required=False, missing=1)
     per_page = fields.Int(required=False, missing=10)
+    include = fields.DelimitedList(fields.String(), required=False, missing=[])
 
 
 dump_schema = DumpScoreSchema()
 dump_many_schema = DumpScoreSchema(many=True)
+fetch_schema = FetchScoreSchema()
 fetch_all_schema = FetchAllScoreSchema()

@@ -26,22 +26,7 @@ services:
     ports:
       - 20005:5000
     depends_on:
-      - score_db
       - score_mongodb
-    networks:
-      - app-net
-  score_db:
-    container_name: score_db
-    image: postgres:9.6
-    volumes:
-      - ${HUNCHO_DIR}/data/dev/score_db/data:/var/lib/postgresql/data/
-    env_file:
-      - ${HUNCHO_DIR}/env/dev/.env.score_db
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U score"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
     networks:
       - app-net
   score_mongodb:

@@ -25,7 +25,6 @@ services:
       retries: 5
     depends_on:
 #      - score_cache
-      - score_db
       - score_mongodb
     networks:
       - score-net
@@ -46,20 +45,6 @@ services:
 #      interval: 30s
 #      timeout: 10s
 #      retries: 5
-  score_db:
-    container_name: score_db
-    image: postgres:9.6
-    volumes:
-      - ${HUNCHO_DIR}/data/qaw/score_db/data:/var/lib/postgresql/data/
-    env_file:
-      - ${HUNCHO_DIR}/env/qaw/.env.score_db
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U score"]
-      interval: 10s
-      timeout: 5s
-      retries: 20
-    networks:
-      - score-net
   score_mongodb:
     container_name: score_mongodb
     image: mongo:3.6
