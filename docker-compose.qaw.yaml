@@ -6,20 +6,15 @@ services:
     build:
       context: ${HUNCHO_DIR}/services/score
       dockerfile: ${HUNCHO_DIR}/services/score/build/Dockerfile.qaw
+      args:
+        NODE_VERSION: 12
     restart: on-failure
     volumes:
-      - ${HUNCHO_DIR}/services/score/migrations:/home/app/migrations
-      - ${HUNCHO_DIR}/services/score/bin:/home/app/bin
-      - ${HUNCHO_DIR}/services/score/tests:/home/app/tests
-      - ${HUNCHO_DIR}/services/score/seeds:/home/app/seeds
       - ${HUNCHO_DIR}/services/score/src:/home/app/src
-      - ${HUNCHO_DIR}/services/score/statics:/home/app/statics
-      - ${HUNCHO_DIR}/services/score/manage.py:/home/app/manage.py
-      - ${HUNCHO_DIR}/services/score/setup.py:/home/app/setup.py
     env_file:
       - ${HUNCHO_DIR}/env/qaw/.env.score
     healthcheck:
-      test: curl --fail -s score:5000/ping || exit 1
+      test: curl --fail -s score:3000/ping || exit 1
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,7 +23,6 @@ services:
       - score_mongodb
     networks:
       - score-net
-      - kong-net
 #  score_cache:
 #    container_name: score_cache
 #    build:
@@ -56,14 +50,6 @@ services:
       - ${HUNCHO_DIR}/env/qaw/.env.score_mongodb
     networks:
       - score-net
-  adminer:
-    container_name: adminer
-    image: adminer:latest
-    restart: always
-    ports:
-      - 8080:8080
-    networks:
-      - score-net
   mongo-express:
     container_name: mongo-express
     image: mongo-express:latest
@@ -77,6 +63,3 @@ services:
 networks:
     score-net:
         driver: bridge
-    kong-net:
-      external:
-        name: frontend_kong-net
