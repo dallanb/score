@@ -1,1 +1,1 @@
-export { default as Score } from './score';
+export { default as ScoreModel } from './score';

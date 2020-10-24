@@ -1,6 +1,6 @@
 import { HTTPException } from '../common';
 import { Request, Response, NextFunction } from 'express';
-import httpStatus from 'http-status';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
 const errorHandler = (
     error: HTTPException,
@@ -8,10 +8,11 @@ const errorHandler = (
     response: Response,
     next: NextFunction
 ) => {
-    const status = error.statusCode || httpStatus.INTERNAL_SERVER_ERROR;
-    const message = error.message || httpStatus[500];
+    const status = error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
+    const message = error.message || getReasonPhrase(status);
+    const err = error.error;
 
-    response.status(status).json({ msg: message, data: null, err: null });
+    response.status(status).json({ msg: message, data: null, err });
 };
 
 export default errorHandler;

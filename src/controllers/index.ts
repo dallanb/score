@@ -1,2 +1,2 @@
-export { Ping } from './ping';
-export { Scores } from './scores';
+export { default as PingController } from './ping';
+export { default as ScoreController } from './score';

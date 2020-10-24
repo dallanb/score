@@ -4,13 +4,13 @@ from flask_restful import marshal_with
 from .schema import *
 from ..base import Base
 from ....common.response import DataResponse
-from ....services import Score
+from ....services import Contest
 
 
 class ScoresAPI(Base):
     def __init__(self):
         Base.__init__(self)
-        self.score = Score()
+        self.score = Contest()
 
     @marshal_with(DataResponse.marshallable())
     def get(self, uuid):
@@ -33,7 +33,7 @@ class ScoresAPI(Base):
 class ScoresListAPI(Base):
     def __init__(self):
         Base.__init__(self)
-        self.score = Score()
+        self.score = Contest()
 
     @marshal_with(DataResponse.marshallable())
     def get(self):
@@ -60,7 +60,7 @@ class ScoresListAPI(Base):
 class ScoresContestAPI(Base):
     def __init__(self):
         Base.__init__(self)
-        self.score = Score()
+        self.score = Contest()
 
     @marshal_with(DataResponse.marshallable())
     def get(self, uuid):

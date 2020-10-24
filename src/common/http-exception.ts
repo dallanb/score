@@ -1,9 +1,9 @@
 class HttpException extends Error {
     statusCode: number;
     message: string;
-    error: string | null;
+    error: Error | null;
 
-    constructor(statusCode: number, message: string, error?: string) {
+    constructor(statusCode: number, message: string, error?: Error) {
         super(message);
 
         this.statusCode = statusCode;

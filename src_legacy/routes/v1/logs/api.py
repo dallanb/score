@@ -4,7 +4,7 @@ from flask_restful import marshal_with
 from .schema import *
 from ..base import Base
 from ....common.response import DataResponse, MessageResponse
-from ....services import Log, Score
+from ....services import Log, Contest
 
 
 class LogsAPI(Base):
@@ -31,7 +31,7 @@ class LogsListAPI(Base):
     def __init__(self):
         Base.__init__(self)
         self.log = Log()
-        self.score = Score()
+        self.score = Contest()
 
     @marshal_with(DataResponse.marshallable())
     def get(self):

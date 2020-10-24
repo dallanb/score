@@ -1,24 +1,20 @@
-import { Message } from 'kafka-node';
-import { Constants } from '../common';
-import { Score as ScoreModel } from '../models';
+import { BaseService } from './base';
+import { ScoreModel } from '../models';
+import { Model } from 'mongoose';
 
-class Score {
-    handleEvent = async (key: Message['key'], value: Message['value']) => {
-        console.log(key);
-        console.log(value);
-        const data =
-            typeof value === 'string' ? JSON.parse(value) : value.toString();
-        switch (key) {
-            case Constants.EVENTS.CONTESTS.CONTEST_CREATED: {
-                const status = await ScoreModel.create({
-                    contest_uuid: data.uuid,
-                    status: 'active',
-                });
-                console.log(status);
-                break;
-            }
-        }
-    };
+class ScoreService extends BaseService {
+    private readonly _model: Model<any>;
+    constructor() {
+        super();
+        this._model = ScoreModel;
+    }
+
+    public find = async (query: any) => super.find(this._model, query);
+
+    public findOne = async (query: any) => super.findOne(this._model, query);
+
+    public findOneAndUpdate = async (query: any, update: any) =>
+        super.findOneAndUpdate(this._model, query, update);
 }
 
-export default new Score();
+export default new ScoreService();

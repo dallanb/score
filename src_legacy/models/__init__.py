@@ -1,2 +1,2 @@
 from .Log import Log
-from .Score import Score
+from .Contest import Contest

@@ -3,7 +3,7 @@ from .base import Base
 from ..common import time_now, generate_uuid, StatusEnum
 
 
-class Score(Base):
+class Contest(Base):
     def __init__(self):
         Base.__init__(self)
         self.logger = logging.getLogger(__name__)

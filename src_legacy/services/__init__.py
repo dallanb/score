@@ -1,3 +1,3 @@
 from .base import Base
 from .log import Log
-from .score import Score
+from .score import Contest

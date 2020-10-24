@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
+import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 
-class Ping {
+class PingController {
     public static index(req: Request, res: Response): any {
         return res.json({
-            msg: 'OK',
+            msg: getReasonPhrase(StatusCodes.OK),
             data: {
                 message: 'pong',
             },
@@ -11,4 +12,4 @@ class Ping {
     }
 }
 
-export default Ping;
+export default PingController;

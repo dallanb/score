@@ -1,13 +1,13 @@
 import express from 'express';
 
-import { Scores } from '../controllers';
+import { ScoreController } from '../controllers';
 
 const router = express.Router();
 
-router.get('/', Scores.fetchAll);
-router.get('/:uuid', Scores.fetch);
-router.get('/contest/:uuid', Scores.fetchByContestUUID);
+router.get('/', ScoreController.fetchAll);
+router.get('/:uuid', ScoreController.fetch);
+router.get('/contest/:uuid', ScoreController.fetchByContestUUID);
 
-router.put('/:uuid', Scores.update);
+router.put('/:uuid', ScoreController.update);
 
 export default router;
