@@ -1,51 +1,25 @@
-# pull official base image
-FROM python:3.7.7-buster
+ARG NODE_VERSION
+FROM node:${NODE_VERSION}
 
-# set work directory
-RUN mkdir -p /home/app
+# Create app directory
 WORKDIR /home/app
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONHASHSEED 0
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package.json ./package.json
+COPY package-lock.json ./package-lock.json
+COPY tsconfig.json ./tsconfig.json
+COPY tslint.json ./tslint.json
+COPY node_modules ./node_modules
+COPY environment.d.ts ./environment.d.ts
 
-# Add aliases
-RUN echo "alias manage='python manage.py'" >> ~/.bashrc
+RUN npm install
 
-## install dependencies
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y netcat-openbsd gcc && \
-    apt-get clean
-
-
-# install dependencies
-RUN pip install --upgrade pip
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-## copy project
-# copy src
 COPY src ./src
-
-# copy bin
-COPY bin ./bin
-
-# copy build bin
 COPY build/bin/entrypoint.sh ./build/bin/entrypoint.sh
 
-# copy tests
-COPY tests ./tests
-
-# create logs directory
-RUN mkdir logs
-
-# copy manage.py
-COPY manage.py .
-
-# setup
-COPY setup.py .
+COPY bin/reset-mongo.sh ./bin/reset-mongo.sh
 
 ## run entrypoint.sh
 ENTRYPOINT ["sh", "./build/bin/entrypoint.sh"]
