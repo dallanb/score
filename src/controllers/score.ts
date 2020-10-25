@@ -117,6 +117,7 @@ class ScoreController extends BaseController {
                 this.schema.updateHoleSchema,
                 req.body
             );
+            // consider triggering an event through this
             const scores = await this.service.findOneAndUpdate(
                 { 'sheet.uuid': uuid },
                 {
