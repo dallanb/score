@@ -109,6 +109,39 @@ class ScoreController extends BaseController {
             res.status(statusCode).json({ message, ...restErr });
         }
     };
+
+    public updateHole = async (req: Request, res: Response): Promise<any> => {
+        try {
+            const { uuid, holeId } = req.params;
+            const values = await this.cleanAsync(
+                this.schema.updateHoleSchema,
+                req.body
+            );
+            const scores = await this.service.findOneAndUpdate(
+                { 'sheet.uuid': uuid },
+                {
+                    $set: {
+                        [`sheet.$.holes.${holeId}`]: values,
+                    },
+                }
+            );
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: {
+                    scores,
+                },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            this.logger.error(statusCode);
+            this.logger.error(message);
+            this.logger.error(restErr);
+            res.status(statusCode).json({ message, ...restErr });
+        }
+    };
 }
 
 export default new ScoreController();

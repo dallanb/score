@@ -35,6 +35,8 @@ class ScoreSchema {
         status: Joi.string().valid('pending', 'active', 'inactive'),
         sheet: Joi.array().items(this._sheetSchema.required()),
     });
+
+    updateHoleSchema = this._holeSchema
 }
 
 export default new ScoreSchema();
