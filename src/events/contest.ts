@@ -1,6 +1,6 @@
 import { Message } from 'kafka-node';
 import { Constants } from '../common';
-import { Score as ScoreModel } from '../models';
+import { ScoreService } from '../services';
 
 class ContestEvent {
     handleEvent = async (key: Message['key'], value: Message['value']) => {
@@ -10,11 +10,10 @@ class ContestEvent {
             typeof value === 'string' ? JSON.parse(value) : value.toString();
         switch (key) {
             case Constants.EVENTS.CONTESTS.CONTEST_CREATED: {
-                const status = await ScoreModel.create({
+                await ScoreService.create({
                     contest_uuid: data.uuid,
                     status: 'active',
                 });
-                console.log(status);
                 break;
             }
         }

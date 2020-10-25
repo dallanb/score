@@ -2,13 +2,13 @@ import Joi from 'joi';
 
 class ScoreSchema {
     _holeSchema = Joi.object({
-        strokes: Joi.number(),
+        strokes: Joi.number().integer().allow(null),
     });
 
     _sheetSchema = Joi.object({
         uuid: Joi.string().guid().required(),
         participant: Joi.string().guid().required(),
-        handicap: Joi.number(),
+        handicap: Joi.number().integer().allow(null),
         holes: Joi.object({
             '1': this._holeSchema.required(),
             '2': this._holeSchema.required(),

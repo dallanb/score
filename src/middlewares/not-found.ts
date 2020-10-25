@@ -9,7 +9,7 @@ const notFoundHandler = (
     const code = StatusCodes.NOT_FOUND;
     const message = getReasonPhrase(code);
 
-    response.status(code).json({ msg: message, data: null, err: null });
+    response.status(code).json({ message, data: null, error: null });
 };
 
 export default notFoundHandler;

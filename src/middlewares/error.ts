@@ -12,7 +12,7 @@ const errorHandler = (
     const message = error.message || getReasonPhrase(status);
     const err = error.error;
 
-    response.status(status).json({ msg: message, data: null, err });
+    response.status(status).json({ message, data: null, error: err });
 };
 
 export default errorHandler;

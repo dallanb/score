@@ -14,63 +14,101 @@ class ScoreController extends BaseController {
         this.service = ScoreService;
     }
 
-    public async fetchAll(req: Request, res: Response): Promise<any> {
-        const scores = await this.service.find({});
-        res.json({
-            msg: getReasonPhrase(StatusCodes.OK),
-            data: {
-                scores,
-            },
-        });
-    }
-
-    public async fetch(req: Request, res: Response): Promise<any> {
-        const { uuid } = req.params;
-        const scores = await this.service.findOne({ uuid });
-        if (!scores) {
-            this.throwError(StatusCodes.NOT_FOUND);
+    public fetchAll = async (req: Request, res: Response): Promise<any> => {
+        try {
+            const scores = await this.service.find({});
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: {
+                    scores,
+                },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            res.status(statusCode).json({ message, ...restErr });
         }
+    };
 
-        res.json({
-            msg: getReasonPhrase(StatusCodes.OK),
-            data: {
-                scores,
-            },
-        });
-    }
+    public fetch = async (req: Request, res: Response): Promise<any> => {
+        try {
+            const { uuid } = req.params;
+            const scores = await this.service.findOne({ uuid });
+            if (!scores) {
+                this.throwError(StatusCodes.NOT_FOUND);
+            }
 
-    public async fetchByContestUUID(req: Request, res: Response): Promise<any> {
-        const { uuid: contest_uuid } = req.params;
-        const scores = await this.service.findOne({ contest_uuid });
-        if (!scores) {
-            this.throwError(StatusCodes.NOT_FOUND);
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: {
+                    scores,
+                },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            res.status(statusCode).json({ message, ...restErr });
         }
-        res.json({
-            msg: getReasonPhrase(StatusCodes.OK),
-            data: {
-                scores,
-            },
-        });
-    }
+    };
 
-    public async update(req: Request, res: Response): Promise<any> {
-        const { uuid } = req.params;
-        const values = await this.cleanAsync(
-            this.schema.updateSchema,
-            req.body
-        );
-        const scores = await this.service.findOneAndUpdate(
-            { uuid },
-            { $set: values }
-        );
+    public fetchByContestUUID = async (
+        req: Request,
+        res: Response
+    ): Promise<any> => {
+        try {
+            const { uuid: contest_uuid } = req.params;
+            const scores = await this.service.findOne({ contest_uuid });
+            if (!scores) {
+                this.throwError(StatusCodes.NOT_FOUND);
+            }
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: {
+                    scores,
+                },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            res.status(statusCode).json({ message, ...restErr });
+        }
+    };
 
-        res.json({
-            msg: getReasonPhrase(StatusCodes.OK),
-            data: {
-                scores,
-            },
-        });
-    }
+    public update = async (req: Request, res: Response): Promise<any> => {
+        try {
+            const { uuid } = req.params;
+            const values = await this.cleanAsync(
+                this.schema.updateSchema,
+                req.body
+            );
+            const scores = await this.service.findOneAndUpdate(
+                { uuid },
+                { $set: values }
+            );
+
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: {
+                    scores,
+                },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            this.logger.error(statusCode);
+            this.logger.error(message);
+            this.logger.error(restErr);
+            res.status(statusCode).json({ message, ...restErr });
+        }
+    };
 }
 
 export default new ScoreController();
