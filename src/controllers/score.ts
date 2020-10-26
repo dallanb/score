@@ -103,9 +103,6 @@ class ScoreController extends BaseController {
             message,
             ...restErr
         }) {
-            this.logger.error(statusCode);
-            this.logger.error(message);
-            this.logger.error(restErr);
             res.status(statusCode).json({ message, ...restErr });
         }
     };
@@ -137,9 +134,6 @@ class ScoreController extends BaseController {
             message,
             ...restErr
         }) {
-            this.logger.error(statusCode);
-            this.logger.error(message);
-            this.logger.error(restErr);
             res.status(statusCode).json({ message, ...restErr });
         }
     };
