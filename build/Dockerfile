@@ -19,7 +19,5 @@ RUN npm install
 COPY src ./src
 COPY build/bin/entrypoint.sh ./build/bin/entrypoint.sh
 
-COPY bin/reset-mongo.sh ./bin/reset-mongo.sh
-
 ## run entrypoint.sh
 ENTRYPOINT ["sh", "./build/bin/entrypoint.sh"]

@@ -31,6 +31,7 @@ services:
       - ${HUNCHO_DIR}/data/dev/score_mongodb/data:/data/db
       - ${HUNCHO_DIR}/data/dev/score_home:/home/mongodb # this must be manually created and chown'd to 999 https://github.com/docker-library/mongo/issues/323
       - ${HUNCHO_DIR}/build/bin/init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+      - ${HUNCHO_DIR}/build/bin/reset-mongo.sh:/bin/reset-mongo.sh
     env_file:
       - ${HUNCHO_DIR}/env/dev/.env.score_mongodb
     networks:

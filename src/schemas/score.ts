@@ -9,6 +9,9 @@ class ScoreSchema {
         uuid: Joi.string().guid().required(),
         participant: Joi.string().guid().required(),
         handicap: Joi.number().integer().allow(null),
+        status: Joi.string()
+            .valid('pending', 'accepted', 'rejected')
+            .required(),
         holes: Joi.object({
             '1': this._holeSchema.required(),
             '2': this._holeSchema.required(),
@@ -32,11 +35,21 @@ class ScoreSchema {
     });
 
     updateSchema = Joi.object({
-        status: Joi.string().valid('pending', 'active', 'inactive'),
+        status: Joi.string().valid(
+            'pending',
+            'active',
+            'inactive',
+            'completed'
+        ),
         sheet: Joi.array().items(this._sheetSchema.required()),
     });
 
-    updateHoleSchema = this._holeSchema
+    updateSheetSchema = Joi.object({
+        status: Joi.string().valid('pending', 'approved', 'rejected'),
+        handicap: Joi.number(),
+    });
+
+    updateHoleSchema = this._holeSchema;
 }
 
 export default new ScoreSchema();
