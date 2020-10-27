@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
+import { set as _set } from 'lodash';
 
 import { BaseController } from './base';
 import { ScoreSchema } from '../schemas';
@@ -97,6 +98,38 @@ class ScoreController extends BaseController {
                 data: {
                     scores,
                 },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            res.status(statusCode).json({ message, ...restErr });
+        }
+    };
+
+    public updateSheet = async (req: Request, res: Response): Promise<any> => {
+        try {
+            const { uuid } = req.params;
+            const values = await this.cleanAsync(
+                this.schema.updateSheetSchema,
+                req.body
+            );
+
+            // consider triggering an event for this action
+            const scores = await this.service.findOneAndUpdate(
+                { 'sheet.uuid': uuid },
+                {
+                    $set: Object.entries(values).reduce(
+                        (accum: any, [key, value]: any) =>
+                            _set(accum, [`sheet.$.${key}`], value),
+                        {}
+                    ),
+                }
+            );
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: { scores },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,

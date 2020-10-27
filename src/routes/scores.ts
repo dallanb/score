@@ -9,6 +9,7 @@ router.get('/:uuid', ScoreController.fetch);
 router.get('/contest/:uuid', ScoreController.fetchByContestUUID);
 
 router.put('/:uuid', ScoreController.update);
+router.put('/sheets/:uuid', ScoreController.updateSheet);
 router.put('/sheets/:uuid/holes/:holeId', ScoreController.updateHole);
 
 export default router;
