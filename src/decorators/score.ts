@@ -25,7 +25,6 @@ class Score {
         args: any[],
         document: any
     ): void {
-        // first arg will be query so we will look at update
         switch (key) {
             case 'updateSheetStrokes': {
                 const sheetUUID = args[0];

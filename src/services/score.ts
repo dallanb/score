@@ -2,6 +2,7 @@ import { BaseService } from './base';
 import { ScoreModel } from '../models';
 import { ScoreDecorator } from '../decorators';
 import { Model } from 'mongoose';
+import { set as _set } from 'lodash';
 
 class ScoreService extends BaseService {
     private readonly _model: Model<any>;
@@ -23,12 +24,31 @@ class ScoreService extends BaseService {
         return super.findOne(this._model, query);
     }
 
-    public async findOneAndUpdate(query: any, update: any): Promise<any> {
+    protected async findOneAndUpdate(query: any, update: any): Promise<any> {
         return super.findOneAndUpdate(this._model, query, update);
     }
 
     public async create(document: any): Promise<any> {
         return super.create(this._model, document);
+    }
+
+    @ScoreDecorator.notification()
+    public async updateScore(uuid: string, params: any): Promise<any> {
+        return this.findOneAndUpdate({ uuid }, { $set: params });
+    }
+
+    @ScoreDecorator.notification()
+    public async updateSheet(sheetUUID: string, params: any): Promise<any> {
+        return this.findOneAndUpdate(
+            { 'sheet.uuid': sheetUUID },
+            {
+                $set: Object.entries(params).reduce(
+                    (accum: any, [key, value]: any) =>
+                        _set(accum, [`sheet.$.${key}`], value),
+                    {}
+                ),
+            }
+        );
     }
 
     @ScoreDecorator.notification()

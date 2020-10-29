@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { getReasonPhrase, StatusCodes } from 'http-status-codes';
-import { set as _set } from 'lodash';
 
 import { BaseController } from './base';
 import { ScoreSchema } from '../schemas';
@@ -88,10 +87,7 @@ class ScoreController extends BaseController {
                 this.schema.updateSchema,
                 req.body
             );
-            const scores = await this.service.findOneAndUpdate(
-                { uuid },
-                { $set: values }
-            );
+            const scores = await this.service.updateScore(uuid, values);
 
             res.json({
                 message: getReasonPhrase(StatusCodes.OK),
@@ -117,16 +113,7 @@ class ScoreController extends BaseController {
             );
 
             // consider triggering an event for this action
-            const scores = await this.service.findOneAndUpdate(
-                { 'sheet.uuid': uuid },
-                {
-                    $set: Object.entries(values).reduce(
-                        (accum: any, [key, value]: any) =>
-                            _set(accum, [`sheet.$.${key}`], value),
-                        {}
-                    ),
-                }
-            );
+            const scores = await this.service.updateSheet(uuid, values);
             res.json({
                 message: getReasonPhrase(StatusCodes.OK),
                 data: { scores },
