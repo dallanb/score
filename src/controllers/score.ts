@@ -148,13 +148,10 @@ class ScoreController extends BaseController {
                 req.body
             );
             // consider triggering an event through this
-            const scores = await this.service.findOneAndUpdate(
-                { 'sheet.uuid': uuid },
-                {
-                    $set: {
-                        [`sheet.$.holes.${holeId}`]: values,
-                    },
-                }
+            const scores = await this.service.updateSheetStrokes(
+                uuid,
+                holeId,
+                values
             );
             res.json({
                 message: getReasonPhrase(StatusCodes.OK),
