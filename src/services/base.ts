@@ -1,5 +1,6 @@
 import Joi from 'joi';
 import { Document, Model } from 'mongoose';
+import { Libs } from '../providers';
 
 export class BaseService {
     public static clean(schema: Joi.Schema, instance: any) {
@@ -28,5 +29,15 @@ export class BaseService {
 
     protected async create(model: Model<any>, document: any) {
         return await model.create(document);
+    }
+
+    protected async notify(topic: string, key: string, messages: any[]) {
+        return Libs.producer.send([
+            {
+                topic,
+                key,
+                messages,
+            },
+        ]);
     }
 }
