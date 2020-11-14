@@ -10,6 +10,10 @@ export class BaseService {
         return await schema.validateAsync(instance);
     }
 
+    protected async aggregate(model: Model<any>, pipeline: any) {
+        return await model.aggregate(pipeline).exec();
+    }
+
     protected async find(model: Model<any>, query: any) {
         return await model.find(query).exec();
     }
