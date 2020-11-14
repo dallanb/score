@@ -7,7 +7,6 @@ declare global {
             KAFKA_PORT: number;
             KAFKA_TOPICS: string;
             MONGO_URL: string;
-            CONTEST_URL: string;
         }
     }
 }

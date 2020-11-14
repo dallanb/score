@@ -5,7 +5,6 @@ declare var process: {
         KAFKA_URL: string;
         KAFKA_TOPICS: string;
         MONGO_URL: string;
-        CONTEST_URL: string;
     };
 };
 
@@ -17,7 +16,6 @@ class Config {
         ? process.env.KAFKA_TOPICS.split(',')
         : [];
     MONGO_URL: string = process.env.MONGO_URL;
-    CONTEST_URL: string = process.env.CONTEST_URL;
 }
 
 export default new Config();
