@@ -8,6 +8,7 @@ import { ScoreService } from '../services';
 class ScoreController extends BaseController {
     private readonly schema: typeof ScoreSchema;
     private readonly service: typeof ScoreService;
+
     constructor() {
         super();
         this.schema = ScoreSchema;

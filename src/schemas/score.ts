@@ -2,7 +2,11 @@ import Joi from 'joi';
 
 class ScoreSchema {
     _holeSchema = Joi.object({
+        name: Joi.string().allow(null),
         strokes: Joi.number().integer().allow(null),
+        uuid: Joi.string().guid().required(),
+        distance: Joi.number().integer().required(),
+        par: Joi.number().integer().required(),
     });
 
     _sheetSchema = Joi.object({
