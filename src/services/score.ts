@@ -58,15 +58,18 @@ class ScoreService extends BaseService {
     @ScoreDecorator.notification()
     public async updateSheetStrokes(
         sheetUUID: string,
-        hole: string,
-        strokes: string
+        holeId: string,
+        hole: string
     ): Promise<any> {
+        const $set = Object.entries(hole).reduce(
+            (holeUpdate: any, [key, val]: any) =>
+                _set(holeUpdate, [`sheet.$.holes.${holeId}.${key}`], val),
+            {}
+        );
         return this.findOneAndUpdate(
             { 'sheet.uuid': sheetUUID },
             {
-                $set: {
-                    [`sheet.$.holes.${hole}`]: strokes,
-                },
+                $set,
             }
         );
     }
