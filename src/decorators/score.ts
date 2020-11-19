@@ -1,4 +1,4 @@
-import { totalStrokeCalculator } from '../common/utils';
+import { sheetScoreCalculator } from '../common/utils';
 import { Constants } from '../common';
 
 class Score {
@@ -31,7 +31,7 @@ class Score {
                 const sheet = document.sheet.find(
                     ({ uuid }: { uuid: string }) => uuid === sheetUUID
                 );
-                const totalStrokes = totalStrokeCalculator(sheet.holes);
+                const { score, strokes } = sheetScoreCalculator(sheet.holes);
                 target.notify(
                     Constants.TOPICS.SCORES,
                     Constants.EVENTS.SCORES.STROKE_UPDATE,
@@ -40,7 +40,8 @@ class Score {
                         contest_uuid: document.contest_uuid,
                         sheet_uuid: sheet.uuid,
                         participant_uuid: sheet.participant,
-                        strokes: totalStrokes,
+                        strokes,
+                        score,
                     })
                 );
                 break;

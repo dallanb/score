@@ -1,8 +1,19 @@
 import Joi from 'joi';
 
 class ScoreSchema {
-    _holeSchema = Joi.object({
+    _holeCreateSchema = Joi.object({
+        name: Joi.string().allow(null),
         strokes: Joi.number().integer().allow(null),
+        uuid: Joi.string().guid().required(),
+        distance: Joi.number().integer().required(),
+        par: Joi.number().integer().required(),
+    });
+    _holeUpdateSchema = Joi.object({
+        name: Joi.string().allow(null),
+        strokes: Joi.number().integer().allow(null),
+        uuid: Joi.string().guid(),
+        distance: Joi.number().integer(),
+        par: Joi.number().integer(),
     });
 
     _sheetSchema = Joi.object({
@@ -13,24 +24,24 @@ class ScoreSchema {
             .valid('pending', 'accepted', 'rejected')
             .required(),
         holes: Joi.object({
-            '1': this._holeSchema.required(),
-            '2': this._holeSchema.required(),
-            '3': this._holeSchema.required(),
-            '4': this._holeSchema.required(),
-            '5': this._holeSchema.required(),
-            '6': this._holeSchema.required(),
-            '7': this._holeSchema.required(),
-            '8': this._holeSchema.required(),
-            '9': this._holeSchema.required(),
-            '10': this._holeSchema.required(),
-            '11': this._holeSchema.required(),
-            '12': this._holeSchema.required(),
-            '13': this._holeSchema.required(),
-            '14': this._holeSchema.required(),
-            '15': this._holeSchema.required(),
-            '16': this._holeSchema.required(),
-            '17': this._holeSchema.required(),
-            '18': this._holeSchema.required(),
+            '1': this._holeCreateSchema.required(),
+            '2': this._holeCreateSchema.required(),
+            '3': this._holeCreateSchema.required(),
+            '4': this._holeCreateSchema.required(),
+            '5': this._holeCreateSchema.required(),
+            '6': this._holeCreateSchema.required(),
+            '7': this._holeCreateSchema.required(),
+            '8': this._holeCreateSchema.required(),
+            '9': this._holeCreateSchema.required(),
+            '10': this._holeCreateSchema.required(),
+            '11': this._holeCreateSchema.required(),
+            '12': this._holeCreateSchema.required(),
+            '13': this._holeCreateSchema.required(),
+            '14': this._holeCreateSchema.required(),
+            '15': this._holeCreateSchema.required(),
+            '16': this._holeCreateSchema.required(),
+            '17': this._holeCreateSchema.required(),
+            '18': this._holeCreateSchema.required(),
         }),
     });
 
@@ -49,7 +60,7 @@ class ScoreSchema {
         handicap: Joi.number(),
     });
 
-    updateHoleSchema = this._holeSchema;
+    updateHoleSchema = this._holeUpdateSchema;
 }
 
 export default new ScoreSchema();

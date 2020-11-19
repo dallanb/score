@@ -8,6 +8,7 @@ import { ScoreService } from '../services';
 class ScoreController extends BaseController {
     private readonly schema: typeof ScoreSchema;
     private readonly service: typeof ScoreService;
+
     constructor() {
         super();
         this.schema = ScoreSchema;
@@ -86,29 +87,22 @@ class ScoreController extends BaseController {
     ): Promise<any> => {
         try {
             const { uuid: contest_uuid } = req.params;
-            const me = req.header('X-Consumer-Custom-ID');
-
-            const scores = await this.service.findOne([
-                { $match: { contest_uuid } },
-                {
-                    $project: {
-                        sheet: {
-                            $filter: {
-                                input: '$sheet',
-                                as: 'sheet',
-                                cond: { $eq: ['$$sheet.participant', me] },
-                            },
-                        },
-                    },
-                },
-            ]);
-            if (!scores) {
+            const me = req.header('X-Consumer-Custom-ID') || '';
+            if (!me) {
+                this.throwError(StatusCodes.FORBIDDEN);
+            }
+            const sheets = await this.service.findParticipantSheet(
+                { contest_uuid },
+                me
+            );
+            if (!sheets) {
                 this.throwError(StatusCodes.NOT_FOUND);
             }
+
             res.json({
                 message: getReasonPhrase(StatusCodes.OK),
                 data: {
-                    scores,
+                    sheets,
                 },
             });
         } catch ({
