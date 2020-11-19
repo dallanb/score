@@ -197,3 +197,4 @@ class ScoreController extends BaseController {
 }
 
 export default new ScoreController();
+
