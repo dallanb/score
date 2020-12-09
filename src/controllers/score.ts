@@ -81,6 +81,36 @@ class ScoreController extends BaseController {
         }
     };
 
+    public fetchParticipantSheetByContestUUID = async (
+        req: Request,
+        res: Response
+    ): Promise<any> => {
+        try {
+            const { uuid: contest_uuid, participantUUID } = req.params;
+
+            const sheets = await this.service.findParticipantSheet(
+                { contest_uuid },
+                participantUUID
+            );
+            if (!sheets) {
+                this.throwError(StatusCodes.NOT_FOUND);
+            }
+
+            res.json({
+                message: getReasonPhrase(StatusCodes.OK),
+                data: {
+                    sheets,
+                },
+            });
+        } catch ({
+            statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+            message,
+            ...restErr
+        }) {
+            res.status(statusCode).json({ message, ...restErr });
+        }
+    };
+
     public fetchMySheetByContestUUID = async (
         req: Request,
         res: Response
@@ -191,4 +221,3 @@ class ScoreController extends BaseController {
 }
 
 export default new ScoreController();
-
