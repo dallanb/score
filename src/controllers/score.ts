@@ -81,6 +81,7 @@ class ScoreController extends BaseController {
         }
     };
 
+    // This can probably be combined with the function below
     public fetchParticipantSheetByContestUUID = async (
         req: Request,
         res: Response
