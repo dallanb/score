@@ -9,10 +9,6 @@ router.get('/:uuid', ScoreController.fetch);
 router.get('/contest/:uuid', ScoreController.fetchByContestUUID);
 // router.get('/contest/:uuid/sheets', ScoreController.fetchAllSheetByContestUUID);
 router.get(
-    '/contest/:uuid/sheets/me',
-    ScoreController.fetchMySheetByContestUUID
-);
-router.get(
     '/contest/:uuid/sheets/:participantUUID',
     ScoreController.fetchParticipantSheetByContestUUID
 );
