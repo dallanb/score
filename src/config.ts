@@ -1,3 +1,5 @@
+import { logger } from './common';
+
 declare var process: {
     env: {
         ENV: string;

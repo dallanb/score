@@ -17,6 +17,7 @@ class ScoreController extends BaseController {
 
     public fetchAll = async (req: Request, res: Response): Promise<any> => {
         try {
+            this.logger.info('YEOH');
             const scores = await this.service.find({});
             res.json({
                 message: getReasonPhrase(StatusCodes.OK),
