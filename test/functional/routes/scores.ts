@@ -1,36 +1,50 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { describe, it } from 'mocha';
-import App from '../../../src/providers/app';
+import { after, before, describe, it } from 'mocha';
+import config from '../../../src/config';
+import { generateUUID } from '../../../src/common/utils';
+import { ScoreModel } from '../../../src/models';
+import { MongoDB } from '../../../src/libs';
+
 // Assertion style
 chai.should();
-
 chai.use(chaiHttp);
 
-const server = App.httpServer;
+const host = `${config.HOST}:${config.PORT}`;
 
-describe('Scores API', () => {
+describe('Scores API', function () {
+    this.timeout(20000);
+    let db: any = null;
+    before(async function () {
+        db = MongoDB;
+        await db.connect();
+    });
     /*
     GIVEN a Express application configured for testing
     WHEN the GET endpoint 'fetchAll' is requested
     THEN check that the response is valid
     */
-    describe('GET /scores', () => {
-        it('It should get all the scores', (done) => {
-            chai.request(server)
-                .get('/ping')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    res.body.should.be.an('array');
-                    res.body.length.should.be.eq(3);
+    describe('GET /scores', function () {
+        it('should get all the scores', async function () {
+            try {
+                await ScoreModel.create({
+                    contest_uuid: generateUUID(),
+                    status: 'active',
                 });
+                const res = await chai.request(host).get('/scores');
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('message').eq('OK');
+                console.log(res.body);
+            } catch (err) {
+                throw err;
+            }
         });
     });
-    /*
-    GIVEN a Express application configured for testing
-    WHEN the GET endpoint 'fetch' is requested
-    THEN check that the response is valid
-    */
+
+    after(function () {
+        db.disconnect();
+    });
     /*
     GIVEN a Express application configured for testing
     WHEN the GET endpoint 'fetch' is requested

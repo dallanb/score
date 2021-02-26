@@ -4,6 +4,7 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { BaseController } from './base';
 import { ScoreSchema } from '../schemas';
 import { ScoreService } from '../services';
+import { generateUUID } from '../common/utils';
 
 class ScoreController extends BaseController {
     private readonly schema: typeof ScoreSchema;
@@ -17,7 +18,6 @@ class ScoreController extends BaseController {
 
     public fetchAll = async (req: Request, res: Response): Promise<any> => {
         try {
-            this.logger.info('YEOH');
             const scores = await this.service.find({});
             res.json({
                 message: getReasonPhrase(StatusCodes.OK),

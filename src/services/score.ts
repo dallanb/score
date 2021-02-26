@@ -29,6 +29,7 @@ class ScoreService extends BaseService {
     }
 
     public async create(document: any): Promise<any> {
+        console.log('I AM BEING CALLED YO');
         return super.create(this._model, document);
     }
 
