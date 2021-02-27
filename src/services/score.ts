@@ -13,7 +13,7 @@ class ScoreService extends BaseService {
     }
 
     public init(params: any): any {
-        return new this._model(...params);
+        return new this._model(params);
     }
 
     public async find(query: any): Promise<any> {
@@ -29,7 +29,6 @@ class ScoreService extends BaseService {
     }
 
     public async create(document: any): Promise<any> {
-        console.log('I AM BEING CALLED YO');
         return super.create(this._model, document);
     }
 
@@ -60,7 +59,7 @@ class ScoreService extends BaseService {
     public async updateSheetStrokes(
         sheetUUID: string,
         holeId: string,
-        hole: string
+        hole: any
     ): Promise<any> {
         const $set = Object.entries(hole).reduce(
             (holeUpdate: any, [key, val]: any) =>

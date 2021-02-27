@@ -5,6 +5,7 @@ import { get as _get } from 'lodash';
 import config from '../../../src/config';
 // @ts-ignore
 import { seedScore } from '../../helpers';
+import { ScoreModel } from '../../../src/models';
 
 // Assertion style
 chai.should();
@@ -14,15 +15,13 @@ const host = `${config.HOST}:${config.PORT}`;
 
 let score: any = null;
 
-before(async function () {
-    score = await seedScore();
-});
-
-after(async function () {
-    // wipe the db
-});
-
 describe('Scores API', async function () {
+    before(async function () {
+        // wipe the db
+        await ScoreModel.deleteMany({});
+        // seed a score instance
+        score = await seedScore();
+    });
     /*
     GIVEN a Express application configured for testing
     WHEN the GET endpoint 'fetchAll' is requested
