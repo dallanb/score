@@ -1,11 +1,11 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { after, before, describe, it } from 'mocha';
+import { after, describe, it } from 'mocha';
 import { get as _get } from 'lodash';
 import config from '../../../src/config';
-import { generateUUID } from '../../../src/common/utils';
-import { ScoreModel } from '../../../src/models';
 import { MongoDB } from '../../../src/libs';
+// @ts-ignore
+import { seedScore } from '../../fixtures';
 
 // Assertion style
 chai.should();
@@ -13,46 +13,27 @@ chai.use(chaiHttp);
 
 const host = `${config.HOST}:${config.PORT}`;
 
-describe('Scores API', function () {
-    this.timeout(20000);
+describe('Scores API', async function () {
     let mongo: any = null;
     let score: any = null;
-
-    // connect to mongo
     before(async function () {
+        // connect to mongo
         mongo = MongoDB;
         await mongo.connect();
+        // wipe db
+        await mongo.db.dropDatabase();
+        // seed score
+        score = await seedScore();
     });
 
-    // wipe the db
     after(async function () {
-        mongo.db.dropDatabase();
+        // wipe the db
+        await mongo.db.dropDatabase();
+
+        // disconnect to from the mongo
+        await mongo.disconnect();
     });
 
-    // seed a single score instance
-    before(async function () {
-        score = await ScoreModel.create({
-            contest_uuid: generateUUID(),
-            status: 'active',
-            sheet: [
-                {
-                    uuid: generateUUID(),
-                    participant: generateUUID(),
-                    handicap: null,
-                    status: 'pending',
-                    holes: {
-                        '1': {
-                            name: 'Uno',
-                            uuid: generateUUID(),
-                            distance: 424,
-                            par: 4,
-                            strokes: null,
-                        },
-                    },
-                },
-            ],
-        });
-    });
     /*
     GIVEN a Express application configured for testing
     WHEN the GET endpoint 'fetchAll' is requested
@@ -64,7 +45,7 @@ describe('Scores API', function () {
                 const res = await chai.request(host).get('/scores');
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.scores');
                 const scores = res.body['data']['scores'];
                 scores.should.have.length(1);
@@ -87,7 +68,7 @@ describe('Scores API', function () {
                     .get(`/scores/${score.uuid}`);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.scores');
             } catch (err) {
                 throw err;
@@ -107,7 +88,7 @@ describe('Scores API', function () {
                     .get(`/scores/contest/${score.contest_uuid}`);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.scores');
             } catch (err) {
                 throw err;
@@ -137,7 +118,7 @@ describe('Scores API', function () {
                     );
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.sheets');
             } catch (err) {
                 throw err;
@@ -159,7 +140,7 @@ describe('Scores API', function () {
                     .send(update);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.scores');
                 const scores = res.body['data']['scores'];
                 scores.should.have.property('status').eq(update.status);
@@ -187,7 +168,7 @@ describe('Scores API', function () {
                     .send(update);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.scores');
                 const scores = res.body['data']['scores'];
                 scores.should.have.property('sheet').length(1);
@@ -218,7 +199,7 @@ describe('Scores API', function () {
                     .send(update);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
-                res.body.should.have.property('message').eq('OK');
+                res.body.should.have.property('msg').eq('OK');
                 res.body.should.have.nested.property('data.scores');
                 const scores = res.body['data']['scores'];
                 scores.should.have.property('sheet').length(1);
@@ -228,14 +209,5 @@ describe('Scores API', function () {
                 throw err;
             }
         });
-    });
-    // wipe the db
-    after(async function () {
-        mongo.db.dropDatabase();
-    });
-
-    // disconnect to from the mongo
-    after(async function () {
-        await mongo.disconnect();
     });
 });
