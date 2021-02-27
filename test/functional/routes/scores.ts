@@ -1,11 +1,10 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import { after, describe, it } from 'mocha';
+import { after, before, describe, it } from 'mocha';
 import { get as _get } from 'lodash';
 import config from '../../../src/config';
-import { MongoDB } from '../../../src/libs';
 // @ts-ignore
-import { seedScore } from '../../fixtures';
+import { seedScore } from '../../helpers';
 
 // Assertion style
 chai.should();
@@ -13,27 +12,17 @@ chai.use(chaiHttp);
 
 const host = `${config.HOST}:${config.PORT}`;
 
+let score: any = null;
+
+before(async function () {
+    score = await seedScore();
+});
+
+after(async function () {
+    // wipe the db
+});
+
 describe('Scores API', async function () {
-    let mongo: any = null;
-    let score: any = null;
-    before(async function () {
-        // connect to mongo
-        mongo = MongoDB;
-        await mongo.connect();
-        // wipe db
-        await mongo.db.dropDatabase();
-        // seed score
-        score = await seedScore();
-    });
-
-    after(async function () {
-        // wipe the db
-        await mongo.db.dropDatabase();
-
-        // disconnect to from the mongo
-        await mongo.disconnect();
-    });
-
     /*
     GIVEN a Express application configured for testing
     WHEN the GET endpoint 'fetchAll' is requested
