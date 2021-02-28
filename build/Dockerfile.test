@@ -31,6 +31,8 @@ RUN npm run build
 
 COPY build/bin/entrypoint.test.sh ./build/bin/entrypoint.sh
 
+COPY bin/init-mongo.sh ./bin/init-mongo.sh
+
 EXPOSE 3000
 
 ## run entrypoint.sh
