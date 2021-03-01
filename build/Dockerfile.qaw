@@ -44,7 +44,7 @@ RUN npm install pm2 -g
 
 COPY build/bin/entrypoint.qaw.sh ./build/bin/entrypoint.sh
 
-COPY bin/init-mongo.sh ./bin/init-mongo.sh
+COPY bin/reset-mongo.sh ./bin/reset-mongo.sh
 
 EXPOSE 3000
 
