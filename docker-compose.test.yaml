@@ -1,0 +1,58 @@
+version: '3.2'
+
+services:
+    app:
+        container_name: app
+        image: dallanbhatti/score:test
+        restart: on-failure
+        volumes:
+            - mongo_bin:/home/app/bin
+        env_file:
+            - env/test/.env.app
+        healthcheck:
+            test: curl --fail -s app:3000/ping || exit 1
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        depends_on:
+            - mongodb
+        networks:
+            - test-net
+    mongodb:
+        container_name: mongodb
+        image: mongo:3.6
+        volumes:
+            - mongo_data:/data/db
+            - mongo_home:/home/mongodb # this must be manually created and chown'd to 999 https://github.com/docker-library/mongo/issues/323
+            - mongo_bin:/docker-entrypoint-initdb.d
+        env_file:
+            - env/test/.env.mongodb
+        networks:
+            - test-net
+    kafka:
+        container_name: kafka
+        image: wurstmeister/kafka:latest
+        restart: on-failure
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        env_file:
+            - env/test/.env.kafka
+        depends_on:
+            - zookeeper
+        networks:
+            - test-net
+    zookeeper:
+        container_name: zookeeper
+        image: wurstmeister/zookeeper:latest
+        restart: on-failure
+        env_file:
+            - env/test/.env.zookeeper
+        networks:
+            - test-net
+volumes:
+    mongo_bin:
+    mongo_data:
+    mongo_home:
+networks:
+    test-net:
+        driver: bridge

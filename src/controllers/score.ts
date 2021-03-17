@@ -4,6 +4,7 @@ import { getReasonPhrase, StatusCodes } from 'http-status-codes';
 import { BaseController } from './base';
 import { ScoreSchema } from '../schemas';
 import { ScoreService } from '../services';
+import { generateUUID } from '../common/utils';
 
 class ScoreController extends BaseController {
     private readonly schema: typeof ScoreSchema;
@@ -17,20 +18,19 @@ class ScoreController extends BaseController {
 
     public fetchAll = async (req: Request, res: Response): Promise<any> => {
         try {
-            this.logger.info('YEOH');
             const scores = await this.service.find({});
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: {
                     scores,
                 },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 
@@ -43,17 +43,17 @@ class ScoreController extends BaseController {
             }
 
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: {
                     scores,
                 },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 
@@ -68,17 +68,17 @@ class ScoreController extends BaseController {
                 this.throwError(StatusCodes.NOT_FOUND);
             }
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: {
                     scores,
                 },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 
@@ -99,17 +99,17 @@ class ScoreController extends BaseController {
             }
 
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: {
                     sheets,
                 },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 
@@ -123,17 +123,17 @@ class ScoreController extends BaseController {
             const scores = await this.service.updateScore(uuid, values);
 
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: {
                     scores,
                 },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 
@@ -148,15 +148,15 @@ class ScoreController extends BaseController {
             // consider triggering an event for this action
             const scores = await this.service.updateSheet(uuid, values);
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: { scores },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 
@@ -174,17 +174,17 @@ class ScoreController extends BaseController {
                 values
             );
             res.json({
-                message: getReasonPhrase(StatusCodes.OK),
+                msg: getReasonPhrase(StatusCodes.OK),
                 data: {
                     scores,
                 },
             });
         } catch ({
             statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-            message,
+            msg,
             ...restErr
         }) {
-            res.status(statusCode).json({ message, ...restErr });
+            res.status(statusCode).json({ msg, ...restErr });
         }
     };
 }
