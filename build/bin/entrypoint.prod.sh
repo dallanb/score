@@ -10,6 +10,4 @@ if [ "$MONGO_DATABASE" = "score" ]; then
   echo "MongoDB started"
 fi
 
-# handle mongo migration here
-
 pm2-runtime dist/index.js

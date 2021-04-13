@@ -21,7 +21,7 @@ class App {
     }
 
     listen(): void {
-        this.httpServer.listen(config.PORT, config.HOST, () => {
+        this.httpServer.listen(config.PORT, () => {
             logger.info(`Server Started. Running at port ${config.PORT}`);
         });
     }

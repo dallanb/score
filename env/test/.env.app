@@ -1,5 +1,4 @@
 ENV=production
-HOST=app
 PORT=3000
 MONGO_URL=mongodb://app:password@mongodb:27017/app
 MONGO_HOST=mongodb
