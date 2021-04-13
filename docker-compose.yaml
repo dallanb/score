@@ -23,7 +23,9 @@ services:
         ports:
             - 20005:3000
         depends_on:
+            - score_kafka
             - score_mongodb
+            - score_zookeeper
         networks:
             - app-net
     score_mongodb:
