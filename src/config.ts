@@ -7,6 +7,7 @@ declare var process: {
         PORT: number;
         KAFKA_URL: string;
         KAFKA_TOPICS: string;
+        KAFKA_GROUP_ID: string;
         MONGO_URL: string;
     };
 };
@@ -19,6 +20,7 @@ class Config {
     KAFKA_TOPICS: string[] = process.env.KAFKA_TOPICS
         ? process.env.KAFKA_TOPICS.split(',')
         : [];
+    KAFKA_GROUP_ID: string = process.env.KAFKA_GROUP_ID;
     MONGO_URL: string = process.env.MONGO_URL;
 }
 
