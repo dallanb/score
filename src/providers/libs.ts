@@ -1,5 +1,5 @@
 import { KafkaConsumer, KafkaProducer, MongoDB } from '../libs';
-import { Constants } from '../common';
+import {Constants, logger} from '../common';
 import { Message } from 'kafka-node';
 import { ContestEvent } from '../events';
 
@@ -18,7 +18,11 @@ class Libs {
         this.consumer = new KafkaConsumer(({ topic, key, value }: Message) => {
             switch (topic) {
                 case Constants.TOPICS.CONTESTS:
-                    ContestEvent.handleEvent(key, value);
+                    try {
+                        ContestEvent.handleEvent(key, value);
+                    } catch (e) {
+                        logger.error(e)
+                    }
                     break;
                 default:
                     throw new Error('Invalid topic');
