@@ -4,6 +4,7 @@ import { logger } from './common';
 const run = async () => {
     Middlewares.initBodyParser(App.application);
     Middlewares.initCors(App.application);
+    Middlewares.initRequestLogger(App.application);
 
     await Libs.initKafkaConsumer();
     await Libs.initKafkaProducer();
@@ -13,6 +14,7 @@ const run = async () => {
     Routes.init(App.application);
 
     // middlewares
+    Middlewares.initErrorLogger(App.application);
     Middlewares.initErrorHandler(App.application);
     Middlewares.initNotFoundHandler(App.application);
 
